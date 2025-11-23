@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>PTIT-RMS - Restaurant Management UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --bg: #0f172a;
+        --bg-soft: #111827;
+        --bg-card: #020617;
+        --bg-elevated: #0b1220;
+        --primary: #38bdf8;
+        --primary-soft: rgba(56, 189, 248, 0.12);
+        --accent: #a855f7;
+        --accent-soft: rgba(168, 85, 247, 0.16);
+        --danger: #f97373;
+        --border-subtle: #1e293b;
+        --text-main: #e5e7eb;
+        --text-muted: #9ca3af;
+        --radius-lg: 14px;
+        --radius-md: 10px;
+        --radius-sm: 6px;
+        --shadow-soft: 0 20px 40px rgba(15, 23, 42, 0.85);
+        --transition: 0.18s ease-out;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: radial-gradient(circle at top, #1d283a 0, #020617 55%);
+        color: var(--text-main);
+        min-height: 100vh;
+      }
+
+      /* ===== APP SHELL ===== */
+
+      .app-shell {
+        max-width: 1440px;
+        margin: 10px auto 32px;
+        border-radius: 24px;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background: radial-gradient(
+            circle at top left,
+            rgba(56, 189, 248, 0.18),
+            transparent 55%
+          ),
+          radial-gradient(
+            circle at bottom right,
+            rgba(168, 85, 247, 0.12),
+            transparent 45%
+          ),
+          rgba(15, 23, 42, 0.98);
+        box-shadow: var(--shadow-soft);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .app-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 18px;
+        border-bottom: 1px solid var(--border-subtle);
+        backdrop-filter: blur(16px);
+        background: linear-gradient(
+          to right,
+          rgba(15, 23, 42, 0.96),
+          rgba(15, 23, 42, 0.9)
+        );
+        z-index: 10;
+      }
+
+      .app-header-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .logo {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: radial-gradient(
+          circle at top left,
+          #38bdf8,
+          #0ea5e9 40%,
+          #6366f1 80%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 15px;
+        color: white;
+        box-shadow: 0 8px 20px rgba(56, 189, 248, 0.6);
+      }
+
+      .app-title {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .app-title span:first-child {
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #e5e7eb;
+      }
+
+      .app-title span:last-child {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .app-header-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+      }
+
+      .header-pill {
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        background: rgba(15, 23, 42, 0.7);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--text-muted);
+      }
+
+      .user-pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 3px 10px 3px 3px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        background: rgba(15, 23, 42, 0.85);
+      }
+
+      .user-avatar {
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #38bdf8, #a855f7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .user-info {
+        display: flex;
+        flex-direction: column;
+        font-size: 11px;
+        line-height: 1.2;
+      }
+
+      .user-info span:first-child {
+        color: #e5e7eb;
+      }
+
+      .user-info span:last-child {
+        color: var(--text-muted);
+      }
+
+      .btn-outline {
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        padding: 4px 10px;
+        background: transparent;
+        color: var(--text-muted);
+        font-size: 11px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: var(--transition);
+      }
+
+      .btn-outline:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: rgba(15, 23, 42, 0.7);
+      }
+
+      /* ===== LAYOUT ===== */
+
+      .app-body {
+        display: grid;
+        grid-template-columns: 230px 1fr;
+        min-height: 640px;
+      }
+
+      .sidebar {
+        border-right: 1px solid var(--border-subtle);
+        padding: 16px 12px 20px;
+        background: radial-gradient(
+          circle at top,
+          rgba(15, 23, 42, 0.9),
+          rgba(15, 23, 42, 1)
+        );
+      }
+
+      .sidebar-section-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #64748b;
+        margin-bottom: 8px;
+        padding: 0 6px;
+      }
+
+      .nav-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-bottom: 16px;
+      }
+
+      .nav-item {
+        border-radius: 999px;
+        padding: 7px 10px;
+        font-size: 12px;
+        color: #cbd5f5;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        position: relative;
+        transition: var(--transition);
+      }
+
+      .nav-item::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: radial-gradient(
+          circle at left,
+          rgba(56, 189, 248, 0.18),
+          transparent 60%
+        );
+        opacity: 0;
+        transition: var(--transition);
+        z-index: -1;
+      }
+
+      .nav-item-icon {
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+      }
+
+      .nav-item span.label {
+        flex: 1;
+      }
+
+      .nav-item small {
+        font-size: 10px;
+        color: var(--text-muted);
+      }
+
+      .nav-item:hover {
+        color: #e5e7eb;
+        background: rgba(15, 23, 42, 0.9);
+      }
+      .nav-item:hover::before {
+        opacity: 1;
+      }
+
+      .nav-item.active {
+        background: linear-gradient(
+          90deg,
+          rgba(56, 189, 248, 0.25),
+          rgba(168, 85, 247, 0.18)
+        );
+        color: #e5e7eb;
+        border: 1px solid rgba(56, 189, 248, 0.4);
+      }
+
+      .nav-item.active .nav-item-icon {
+        border-color: #38bdf8;
+        background: rgba(15, 23, 42, 0.9);
+      }
+
+      .sidebar-footer {
+        margin-top: 24px;
+        padding: 10px;
+        border-radius: var(--radius-md);
+        border: 1px dashed rgba(148, 163, 184, 0.4);
+        background: rgba(15, 23, 42, 0.8);
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .sidebar-footer strong {
+        display: block;
+        color: #e5e7eb;
+        margin-bottom: 4px;
+      }
+
+      .main {
+        padding: 16px 18px 20px;
+        overflow: hidden;
+      }
+
+      .view {
+        display: none;
+        height: 100%;
+      }
+
+      .view.active {
+        display: block;
+      }
+
+      .view-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+
+      .view-title {
+        font-size: 18px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .view-subtitle {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .chip {
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        font-size: 10px;
+        color: var(--text-muted);
+      }
+
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+      }
+
+      .toolbar .input {
+        background: rgba(15, 23, 42, 0.7);
+        border-color: rgba(148, 163, 184, 0.5);
+        min-width: 140px;
+      }
+
+      /* ===== DASHBOARD ===== */
+
+      .dashboard-grid {
+        display: grid;
+        grid-template-rows: auto auto auto;
+        gap: 12px;
+      }
+
+      .kpi-row {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .kpi-card {
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-subtle);
+        background: radial-gradient(
+          circle at top left,
+          rgba(56, 189, 248, 0.18),
+          rgba(15, 23, 42, 0.98)
+        );
+        padding: 10px;
+        font-size: 11px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .kpi-label {
+        color: var(--text-muted);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        margin-bottom: 6px;
+      }
+
+      .kpi-value {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+
+      .kpi-trend {
+        font-size: 10px;
+        color: #22c55e;
+      }
+
+      .kpi-card::after {
+        content: "";
+        position: absolute;
+        right: -20px;
+        bottom: -20px;
+        width: 60px;
+        height: 60px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        opacity: 0.4;
+      }
+
+      .charts-row {
+        display: grid;
+        grid-template-columns: 2fr 1.3fr;
+        gap: 10px;
+      }
+
+      .chart {
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-subtle);
+        background: var(--bg-elevated);
+        padding: 10px;
+        font-size: 11px;
+      }
+
+      .chart-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 6px;
+        color: var(--text-muted);
+        font-size: 11px;
+      }
+
+      .chart-placeholder {
+        border-radius: 8px;
+        border: 1px dashed rgba(148, 163, 184, 0.5);
+        height: 160px;
+        background: repeating-linear-gradient(
+          135deg,
+          rgba(15, 23, 42, 0.9),
+          rgba(15, 23, 42, 0.9) 4px,
+          rgba(31, 41, 55, 0.8) 4px,
+          rgba(31, 41, 55, 0.8) 8px
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6b7280;
+        font-size: 11px;
+      }
+
+      .tables-row {
+        display: grid;
+        grid-template-columns: 1.4fr 1.4fr;
+        gap: 10px;
+      }
+
+      .simple-table {
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-subtle);
+        background: var(--bg-elevated);
+        padding: 8px;
+        font-size: 11px;
+      }
+
+      .simple-table-title {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .st-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 3px 0;
+        border-bottom: 1px solid rgba(30, 64, 175, 0.4);
+      }
+
+      .st-row.header {
+        font-weight: 600;
+        border-bottom-color: rgba(96, 165, 250, 0.5);
+      }
+
+      /* ===== TABLES & ORDERING ===== */
+
+      .two-col {
+        display: grid;
+        grid-template-columns: 3fr 2.2fr;
+        gap: 12px;
+        height: calc(100% - 40px);
+      }
+
+      .panel {
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-subtle);
+        background: rgba(15, 23, 42, 0.95);
+        padding: 10px;
+        font-size: 11px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .panel-header h3 {
+        margin: 0;
+        font-size: 13px;
+      }
+
+      .filter-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+
+      .chip-filter {
+        padding: 3px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        cursor: pointer;
+        font-size: 10px;
+        color: var(--text-muted);
+      }
+
+      .chip-filter.active {
+        background: var(--primary-soft);
+        border-color: var(--primary);
+        color: #e5e7eb;
+      }
+
+      .table-grid {
+        flex: 1;
+        border-radius: 12px;
+        border: 1px solid rgba(15, 23, 42, 0.9);
+        background: radial-gradient(
+          circle at top,
+          rgba(15, 23, 42, 0.96),
+          rgba(15, 23, 42, 1)
+        );
+        padding: 10px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .table-card {
+        border-radius: 10px;
+        border: 1px solid rgba(30, 64, 175, 0.6);
+        background: linear-gradient(
+          135deg,
+          rgba(15, 23, 42, 0.96),
+          rgba(23, 37, 84, 0.98)
+        );
+        padding: 6px 7px;
+        font-size: 11px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        transition: var(--transition);
+        position: relative;
+      }
+
+      .table-card:hover {
+        transform: translateY(-1px);
+        border-color: var(--primary);
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.9);
+      }
+
+      .table-card.selected {
+        border-color: var(--primary);
+        box-shadow: 0 12px 26px rgba(56, 189, 248, 0.3);
+        background: radial-gradient(
+          circle at top left,
+          rgba(56, 189, 248, 0.26),
+          rgba(15, 23, 42, 1)
+        );
+      }
+
+      .table-name {
+        font-weight: 600;
+        font-size: 12px;
+      }
+
+      .table-meta {
+        color: var(--text-muted);
+      }
+
+      .status-pill {
+        align-self: flex-start;
+        padding: 1px 7px;
+        border-radius: 999px;
+        font-size: 9px;
+        border: 1px solid;
+      }
+
+      .status-available {
+        border-color: #22c55e;
+        color: #bbf7d0;
+        background: rgba(22, 163, 74, 0.1);
+      }
+      .status-serving {
+        border-color: #facc15;
+        color: #fef9c3;
+        background: rgba(234, 179, 8, 0.12);
+      }
+      .status-reserved {
+        border-color: #38bdf8;
+        color: #bae6fd;
+        background: rgba(37, 99, 235, 0.24);
+      }
+      .status-locked {
+        border-color: #475569;
+        color: #cbd5f5;
+        background: rgba(30, 41, 59, 0.7);
+      }
+
+      /* Order panel */
+
+      .order-summary {
+        border-radius: 12px;
+        border: 1px solid rgba(30, 64, 175, 0.8);
+        background: radial-gradient(
+          circle at top,
+          rgba(15, 23, 42, 1),
+          rgba(15, 23, 42, 0.96)
+        );
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+      }
+
+      .order-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 11px;
+      }
+
+      .order-header-title {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .order-header-title strong {
+        font-size: 13px;
+      }
+
+      .order-items-table {
+        border-radius: 10px;
+        border: 1px solid rgba(30, 64, 175, 0.9);
+        background: rgba(15, 23, 42, 0.98);
+        font-size: 11px;
+        overflow: hidden;
+      }
+
+      .order-row,
+      .order-row.header {
+        display: grid;
+        grid-template-columns: 2.1fr 0.5fr 0.9fr 0.9fr 1.1fr;
+        gap: 4px;
+        padding: 4px 8px;
+        border-bottom: 1px solid rgba(15, 23, 42, 0.95);
+      }
+
+      .order-row.header {
+        background: rgba(15, 23, 42, 0.96);
+        border-bottom-color: rgba(56, 189, 248, 0.4);
+        font-weight: 600;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--text-muted);
+      }
+
+      .order-row:last-child {
+        border-bottom: none;
+      }
+
+      .order-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 11px;
+        margin-top: 2px;
+      }
+
+      .order-footer-buttons {
+        display: flex;
+        gap: 6px;
+      }
+
+      .btn-soft {
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        padding: 4px 10px;
+        font-size: 11px;
+        background: rgba(15, 23, 42, 0.9);
+        color: var(--text-main);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .btn-soft:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+      }
+
+      .btn-soft-primary {
+        border-color: var(--primary);
+        background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+        color: #0b1120;
+        font-weight: 600;
+      }
+
+      .btn-soft-primary:hover {
+        filter: brightness(1.05);
+      }
+
+      .order-search {
+        border-radius: 10px;
+        border: 1px solid rgba(30, 64, 175, 0.7);
+        background: rgba(15, 23, 42, 0.96);
+        padding: 6px 8px;
+        font-size: 11px;
+      }
+
+      .order-search-top {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 4px;
+      }
+
+      .order-search-results {
+        border-top: 1px solid rgba(30, 64, 175, 0.8);
+        padding-top: 4px;
+      }
+
+      /* ===== KITCHEN ===== */
+
+      .kitchen-cols {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        height: calc(100% - 40px);
+      }
+
+      .k-col {
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-subtle);
+        background: rgba(15, 23, 42, 0.96);
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        font-size: 11px;
+      }
+
+      .k-col h3 {
+        margin: 0 0 6px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--text-muted);
+      }
+
+      .ticket {
+        border-radius: 10px;
+        border: 1px solid rgba(30, 64, 175, 0.8);
+        background: radial-gradient(
+          circle at top left,
+          rgba(37, 99, 235, 0.22),
+          rgba(15, 23, 42, 1)
+        );
+        padding: 7px 8px;
+        font-size: 11px;
+        margin-bottom: 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .ticket strong {
+        font-size: 12px;
+      }
+
+      .ticket-meta {
+        color: var(--text-muted);
+      }
+
+      .ticket-actions {
+        margin-top: 4px;
+      }
+
+      .badge-soft {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 7px;
+        border-radius: 999px;
+        border: 1px solid rgba(129, 140, 248, 0.6);
+        font-size: 9px;
+        color: #c7d2fe;
+        background: rgba(37, 99, 235, 0.12);
+      }
+
+      /* ===== PAYMENT ===== */
+
+      .payment-layout {
+        display: grid;
+        grid-template-columns: 2.1fr 3fr;
+        gap: 12px;
+        height: calc(100% - 40px);
+      }
+
+      .list-panel {
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-subtle);
+        background: rgba(15, 23, 42, 0.96);
+        padding: 8px;
+        font-size: 11px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .tab-switch {
+        display: inline-flex;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        overflow: hidden;
+        font-size: 11px;
+      }
+
+      .tab-switch button {
+        border: none;
+        background: transparent;
+        padding: 4px 10px;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 11px;
+      }
+      .tab-switch button.active {
+        background: var(--primary-soft);
+        color: #e5e7eb;
+      }
+
+      .list-item {
+        border-radius: 9px;
+        border: 1px solid rgba(30, 64, 175, 0.7);
+        background: rgba(15, 23, 42, 0.98);
+        padding: 6px 8px;
+        font-size: 11px;
+        margin-bottom: 4px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        transition: var(--transition);
+      }
+
+      .list-item:hover {
+        border-color: var(--primary);
+        background: radial-gradient(
+          circle at top left,
+          rgba(56, 189, 248, 0.2),
+          rgba(15, 23, 42, 1)
+        );
+      }
+
+      .list-item strong {
+        font-size: 12px;
+      }
+
+      .detail-panel {
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-subtle);
+        background: rgba(15, 23, 42, 0.96);
+        padding: 8px;
+        font-size: 11px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .payment-summary {
+        border-radius: 10px;
+        border: 1px solid rgba(30, 64, 175, 0.8);
+        background: rgba(15, 23, 42, 0.98);
+        padding: 6px 8px;
+        font-size: 11px;
+        margin-top: 4px;
+      }
+
+      .payment-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2px;
+      }
+
+      /* ===== INVENTORY ===== */
+
+      .inventory-layout {
+        display: grid;
+        grid-template-columns: 3fr 2.2fr;
+        gap: 12px;
+        height: calc(100% - 40px);
+      }
+
+      .inventory-table {
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-subtle);
+        background: rgba(15, 23, 42, 0.96);
+        padding: 6px 8px;
+        font-size: 11px;
+      }
+
+      .inv-row {
+        display: grid;
+        grid-template-columns: 2fr 0.7fr 0.9fr 0.9fr 1fr;
+        gap: 6px;
+        padding: 4px 2px;
+        border-bottom: 1px solid rgba(15, 23, 42, 0.95);
+      }
+
+      .inv-row.header {
+        font-weight: 600;
+        border-bottom-color: rgba(56, 189, 248, 0.5);
+        font-size: 10px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      .inventory-detail {
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-subtle);
+        background: rgba(15, 23, 42, 0.96);
+        padding: 8px;
+        font-size: 11px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .tag-warning {
+        border-radius: 999px;
+        border: 1px solid #facc15;
+        padding: 2px 8px;
+        font-size: 10px;
+        color: #fef9c3;
+        background: rgba(234, 179, 8, 0.1);
+      }
+
+      /* ===== SMALL SCREEN NOTE ===== */
+
+      @media (max-width: 960px) {
+        .app-body {
+          grid-template-columns: 1fr;
+        }
+        .sidebar {
+          display: none;
+        }
+        .view-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 6px;
+        }
+        .two-col,
+        .kitchen-cols,
+        .payment-layout,
+        .inventory-layout {
+          grid-template-columns: 1fr;
+          height: auto;
+        }
+        .kpi-row {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <!-- HEADER -->
+      <header class="app-header">
+        <div class="app-header-left">
+          <div class="logo">R</div>
+          <div class="app-title">
+            <span>PTIT-RMS</span>
+            <span>Restaurant Management System</span>
+          </div>
+        </div>
+        <div class="app-header-right">
+          <div class="header-pill">
+            <span>Ca hiện tại:</span>
+            <strong>10:00 – 14:00</strong>
+          </div>
+          <div class="header-pill">
+            <span>Khu vực:</span>
+            <strong>Tầng 1</strong>
+          </div>
+          <div class="user-pill">
+            <div class="user-avatar">A</div>
+            <div class="user-info">
+              <span>Phan Hoàng Anh</span>
+              <span>Manager</span>
+            </div>
+          </div>
+          <button class="btn-outline">Đăng xuất</button>
+        </div>
+      </header>
+
+      <div class="app-body">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+          <div class="sidebar-section-title">Tổng quan</div>
+          <div class="nav-list">
+            <div class="nav-item active" data-view="dashboard">
+              <div class="nav-item-icon">📊</div>
+              <span class="label">Dashboard</span>
+              <small>Chỉ số ca làm việc</small>
+            </div>
+          </div>
+
+          <div class="sidebar-section-title">Nghiệp vụ chính</div>
+          <div class="nav-list">
+            <div class="nav-item" data-view="tables">
+              <div class="nav-item-icon">🧑‍🍳</div>
+              <span class="label">Bàn &amp; gọi món</span>
+              <small>Nhân viên phục vụ</small>
+            </div>
+            <div class="nav-item" data-view="kitchen">
+              <div class="nav-item-icon">🍽</div>
+              <span class="label">Bếp</span>
+              <small>Chuẩn bị món</small>
+            </div>
+            <div class="nav-item" data-view="payment">
+              <div class="nav-item-icon">💳</div>
+              <span class="label">Thanh toán</span>
+              <small>Thu ngân</small>
+            </div>
+            <div class="nav-item" data-view="inventory">
+              <div class="nav-item-icon">📦</div>
+              <span class="label">Kho</span>
+              <small>Nguyên liệu</small>
+            </div>
+          </div>
+
+          <div class="sidebar-footer">
+            <strong>Tips</strong>
+            <span
+              >Sidebar này tương ứng với các Use Case chính: UC-01 đến UC-05.
+              Khi lên Figma, bạn có thể tách mỗi view thành một frame
+              riêng.</span
+            >
+          </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main">
+          <!-- DASHBOARD VIEW -->
+          <section id="view-dashboard" class="view active">
+            <div class="view-header">
+              <div>
+                <div class="view-title">
+                  <span>Dashboard quản lý</span>
+                  <span class="chip">Hôm nay · Nhà hàng PTIT</span>
+                </div>
+                <div class="view-subtitle">
+                  Tổng quan hoạt động, doanh thu, bàn phục vụ và cảnh báo tồn
+                  kho.
+                </div>
+              </div>
+              <div class="toolbar">
+                <div class="input">Khoảng thời gian: Hôm nay ▼</div>
+                <div class="input">Ca: Tất cả ▼</div>
+              </div>
+            </div>
+
+            <div class="dashboard-grid">
+              <!-- KPI -->
+              <div class="kpi-row">
+                <div class="kpi-card">
+                  <div class="kpi-label">Doanh thu hôm nay</div>
+                  <div class="kpi-value">12.500.000đ</div>
+                  <div class="kpi-trend">▲ +8% so với hôm qua</div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-label">Bàn đã phục vụ</div>
+                  <div class="kpi-value">32 bàn</div>
+                  <div class="kpi-trend">Ca trưa đang cao điểm</div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-label">Đơn hủy / đổi</div>
+                  <div class="kpi-value">2 đơn</div>
+                  <div class="kpi-trend" style="color: #f97373">
+                    ▲ Tập trung xử lý
+                  </div>
+                </div>
+                <div class="kpi-card">
+                  <div class="kpi-label">Nguyên liệu dưới ngưỡng</div>
+                  <div class="kpi-value">5 mặt hàng</div>
+                  <div class="kpi-trend">Cần nhập trong hôm nay</div>
+                </div>
+              </div>
+
+              <!-- Charts -->
+              <div class="charts-row">
+                <div class="chart">
+                  <div class="chart-title">
+                    <span>Doanh thu theo khung giờ</span>
+                    <span class="chip">Ca sáng · trưa · tối</span>
+                  </div>
+                  <div class="chart-placeholder">
+                    Biểu đồ cột minh hoạ (khi lên Figma bạn vẽ chart thật)
+                  </div>
+                </div>
+                <div class="chart">
+                  <div class="chart-title">
+                    <span>Cơ cấu doanh thu</span>
+                    <span class="chip">Theo nhóm món</span>
+                  </div>
+                  <div class="chart-placeholder">
+                    Biểu đồ tròn: Món chính / Đồ uống / Khác
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tables -->
+              <div class="tables-row">
+                <div class="simple-table">
+                  <div class="simple-table-title">
+                    <span>Top món bán chạy</span>
+                    <span style="color: var(--text-muted); font-size: 10px"
+                      >Theo số lượng</span
+                    >
+                  </div>
+                  <div class="st-row header">
+                    <span>Món</span><span>SL</span>
+                  </div>
+                  <div class="st-row">
+                    <span>Bò lúc lắc</span><span>25</span>
+                  </div>
+                  <div class="st-row">
+                    <span>Cơm chiên hải sản</span><span>18</span>
+                  </div>
+                  <div class="st-row"><span>Lẩu thái</span><span>12</span></div>
+                </div>
+
+                <div class="simple-table">
+                  <div class="simple-table-title">
+                    <span>Nguyên liệu dưới ngưỡng</span>
+                    <span style="color: var(--text-muted); font-size: 10px"
+                      >Theo tồn / ngưỡng</span
+                    >
+                  </div>
+                  <div class="st-row header">
+                    <span>Nguyên liệu</span><span>Tồn / Ngưỡng</span>
+                  </div>
+                  <div class="st-row">
+                    <span>Rau xà lách</span><span>2 / 5</span>
+                  </div>
+                  <div class="st-row">
+                    <span>Nước cam cô đặc</span><span>0 / 3</span>
+                  </div>
+                  <div class="st-row">
+                    <span>Xương ống bò</span><span>4 / 8</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- TABLES VIEW -->
+          <section id="view-tables" class="view">
+            <div class="view-header">
+              <div>
+                <div class="view-title">
+                  <span>Sơ đồ bàn &amp; gọi món</span>
+                  <span class="chip">Vai trò: Nhân viên phục vụ</span>
+                </div>
+                <div class="view-subtitle">
+                  Xem sơ đồ bàn theo khu vực, nhận bàn, mở &amp; cập nhật đơn
+                  hàng tại bàn.
+                </div>
+              </div>
+              <div class="toolbar">
+                <div class="input">Khu vực: Tầng 1 ▼</div>
+                <div class="input">Trạng thái: Tất cả ▼</div>
+              </div>
+            </div>
+
+            <div class="two-col">
+              <!-- LEFT: TABLE MAP -->
+              <div class="panel">
+                <div class="panel-header">
+                  <h3>Sơ đồ bàn</h3>
+                  <span class="chip">16 bàn · 10 đang phục vụ</span>
+                </div>
+                <div class="filter-chips">
+                  <div class="chip-filter active">Tất cả</div>
+                  <div class="chip-filter">Trống</div>
+                  <div class="chip-filter">Đang phục vụ</div>
+                  <div class="chip-filter">Đặt trước</div>
+                  <div class="chip-filter">Cần dọn</div>
+                  <div class="chip-filter">Khóa</div>
+                </div>
+                <div class="table-grid" id="tableGrid">
+                  <!-- Các bàn demo -->
+                  <div
+                    class="table-card selected"
+                    data-table="T01"
+                    data-status="Trống"
+                    data-guests="4"
+                  >
+                    <div class="table-name">T01</div>
+                    <div class="table-meta">4 ghế · Khu vực Tầng 1</div>
+                    <span class="status-pill status-available">Trống</span>
+                  </div>
+                  <div
+                    class="table-card"
+                    data-table="T02"
+                    data-status="Đang phục vụ"
+                    data-guests="4"
+                  >
+                    <div class="table-name">T02</div>
+                    <div class="table-meta">4 ghế · Khu vực Tầng 1</div>
+                    <span class="status-pill status-serving">Đang phục vụ</span>
+                  </div>
+                  <div
+                    class="table-card"
+                    data-table="T03"
+                    data-status="Đặt trước"
+                    data-guests="6"
+                  >
+                    <div class="table-name">T03</div>
+                    <div class="table-meta">6 ghế · Khu vực Tầng 1</div>
+                    <span class="status-pill status-reserved">Đặt trước</span>
+                  </div>
+                  <div
+                    class="table-card"
+                    data-table="T04"
+                    data-status="Khóa"
+                    data-guests="2"
+                  >
+                    <div class="table-name">T04</div>
+                    <div class="table-meta">2 ghế · Khu vực Tầng 1</div>
+                    <span class="status-pill status-locked">Khóa</span>
+                  </div>
+                  <div
+                    class="table-card"
+                    data-table="T05"
+                    data-status="Đang phục vụ"
+                    data-guests="4"
+                  >
+                    <div class="table-name">T05</div>
+                    <div class="table-meta">4 ghế · Khu vực Tầng 2</div>
+                    <span class="status-pill status-serving">Đang phục vụ</span>
+                  </div>
+                  <!-- thêm vài bàn cho đầy grid -->
+                  <div
+                    class="table-card"
+                    data-table="T06"
+                    data-status="Trống"
+                    data-guests="2"
+                  >
+                    <div class="table-name">T06</div>
+                    <div class="table-meta">2 ghế · Khu vực Tầng 2</div>
+                    <span class="status-pill status-available">Trống</span>
+                  </div>
+                  <div
+                    class="table-card"
+                    data-table="T07"
+                    data-status="Cần dọn"
+                    data-guests="4"
+                  >
+                    <div class="table-name">T07</div>
+                    <div class="table-meta">4 ghế · Khu vực Sân vườn</div>
+                    <span class="status-pill status-serving">Cần dọn</span>
+                  </div>
+                  <div
+                    class="table-card"
+                    data-table="T08"
+                    data-status="Trống"
+                    data-guests="8"
+                  >
+                    <div class="table-name">T08</div>
+                    <div class="table-meta">8 ghế · Phòng VIP</div>
+                    <span class="status-pill status-available">Trống</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- RIGHT: ORDER PANEL -->
+              <div class="panel">
+                <div class="panel-header">
+                  <div>
+                    <h3>Đơn hàng tại bàn</h3>
+                    <div
+                      id="orderMeta"
+                      style="font-size: 11px; color: var(--text-muted)"
+                    >
+                      Bàn T01 · 4 khách · Khu vực Tầng 1
+                    </div>
+                  </div>
+                  <span class="chip" id="orderStatusChip"
+                    >Trạng thái: Trống</span
+                  >
+                </div>
+
+                <div class="order-summary">
+                  <div class="order-header">
+                    <div class="order-header-title">
+                      <strong>ORD-2023-00123</strong>
+                      <span style="color: var(--text-muted)"
+                        >Mở bởi: Anh (Waiter) · 12:05</span
+                      >
+                    </div>
+                    <span class="badge-soft">Chưa gửi bếp toàn bộ</span>
+                  </div>
+
+                  <div class="order-items-table">
+                    <div class="order-row header">
+                      <div>Món</div>
+                      <div>SL</div>
+                      <div>Đơn giá</div>
+                      <div>Thành tiền</div>
+                      <div>Trạng thái</div>
+                    </div>
+                    <div class="order-row">
+                      <div>Bò lúc lắc</div>
+                      <div>2</div>
+                      <div>150k</div>
+                      <div>300k</div>
+                      <div>Đã gửi bếp</div>
+                    </div>
+                    <div class="order-row">
+                      <div>Nước cam</div>
+                      <div>3</div>
+                      <div>35k</div>
+                      <div>105k</div>
+                      <div>Chưa gửi</div>
+                    </div>
+                  </div>
+
+                  <div class="order-footer">
+                    <div>
+                      <div>Tạm tính: <strong>405.000đ</strong></div>
+                      <div style="color: var(--text-muted)">
+                        Ghi chú: Khách muốn lên món nhanh.
+                      </div>
+                    </div>
+                    <div class="order-footer-buttons">
+                      <button class="btn-soft">Lưu</button>
+                      <button class="btn-soft">Gửi bếp</button>
+                      <button class="btn-soft-primary">
+                        Yêu cầu thanh toán
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="order-search">
+                    <div class="order-search-top">
+                      <div class="input" style="flex: 1">Tìm món...</div>
+                      <div class="input" style="width: 150px">
+                        Danh mục: Tất cả ▼
+                      </div>
+                    </div>
+                    <div class="order-search-results">
+                      <div
+                        style="
+                          display: flex;
+                          justify-content: space-between;
+                          margin-bottom: 2px;
+                        "
+                      >
+                        <span>Cơm chiên hải sản</span><span>75k</span>
+                      </div>
+                      <div
+                        style="
+                          display: flex;
+                          justify-content: space-between;
+                          margin-bottom: 2px;
+                        "
+                      >
+                        <span>Lẩu thái</span><span>220k</span>
+                      </div>
+                      <div
+                        style="display: flex; justify-content: space-between"
+                      >
+                        <span>Trà đào cam sả</span><span>45k</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- KITCHEN VIEW -->
+          <section id="view-kitchen" class="view">
+            <div class="view-header">
+              <div>
+                <div class="view-title">
+                  <span>Màn hình bếp</span>
+                  <span class="chip">Vai trò: Chef</span>
+                </div>
+                <div class="view-subtitle">
+                  Bếp xem danh sách món chờ, cập nhật trạng thái chế biến cho
+                  từng bàn.
+                </div>
+              </div>
+              <div class="toolbar">
+                <div class="input">Khu vực: Tầng 1 ▼</div>
+                <div class="input">Loại: Món ăn ▼</div>
+              </div>
+            </div>
+
+            <div class="kitchen-cols">
+              <div class="k-col">
+                <h3>
+                  Chờ chế biến
+                  <span class="chip">4 món</span>
+                </h3>
+                <div class="ticket">
+                  <strong>Bò lúc lắc</strong>
+                  <div class="ticket-meta">
+                    Bàn T02 · SL: 2 · Ghi chú: Ít cay
+                  </div>
+                  <div class="ticket-meta">Gửi: 12:05</div>
+                  <div class="ticket-actions">
+                    <button class="btn-soft">Xem chi tiết</button>
+                    <button class="btn-soft-primary">Bắt đầu chế biến</button>
+                  </div>
+                </div>
+                <div class="ticket">
+                  <strong>Lẩu thái</strong>
+                  <div class="ticket-meta">Bàn T03 · SL: 1</div>
+                  <div class="ticket-meta">Gửi: 12:10</div>
+                </div>
+              </div>
+              <div class="k-col">
+                <h3>
+                  Đang chế biến
+                  <span class="chip">2 món</span>
+                </h3>
+                <div class="ticket">
+                  <strong>Gà nướng muối ớt</strong>
+                  <div class="ticket-meta">Bàn T01 · SL: 1</div>
+                  <div class="ticket-meta">Bắt đầu: 12:07</div>
+                  <div class="ticket-actions">
+                    <button class="btn-soft-primary">Hoàn thành</button>
+                  </div>
+                </div>
+              </div>
+              <div class="k-col">
+                <h3>
+                  Đã sẵn sàng
+                  <span class="chip">3 món</span>
+                </h3>
+                <div class="ticket">
+                  <strong>Nước cam</strong>
+                  <div class="ticket-meta">Bàn T02 · SL: 3</div>
+                  <div class="ticket-meta">Sẵn sàng: 12:09</div>
+                  <span class="badge-soft">Đợi phục vụ</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- PAYMENT VIEW -->
+          <section id="view-payment" class="view">
+            <div class="view-header">
+              <div>
+                <div class="view-title">
+                  <span>Thanh toán &amp; in hoá đơn</span>
+                  <span class="chip">Vai trò: Thu ngân</span>
+                </div>
+                <div class="view-subtitle">
+                  Chọn bàn/đơn cần thanh toán, áp dụng giảm giá, chọn phương
+                  thức và in hoá đơn.
+                </div>
+              </div>
+              <div class="toolbar">
+                <div class="input">Tìm bàn / mã đơn...</div>
+              </div>
+            </div>
+
+            <div class="payment-layout">
+              <div class="list-panel">
+                <div class="tab-switch">
+                  <button class="active">Bàn</button>
+                  <button>Đơn hàng</button>
+                </div>
+                <div class="list-item">
+                  <strong>Bàn T02</strong>
+                  <span style="color: var(--text-muted)"
+                    >Chờ thanh toán · 405.000đ</span
+                  >
+                </div>
+                <div class="list-item">
+                  <strong>Bàn T05</strong>
+                  <span style="color: var(--text-muted)">Đang dùng bữa</span>
+                </div>
+              </div>
+
+              <div class="detail-panel">
+                <div class="panel-header">
+                  <div>
+                    <h3>Đơn hàng Bàn T02</h3>
+                    <div style="font-size: 11px; color: var(--text-muted)">
+                      Mã ĐH: ORD-2023-00123 · 4 khách · Khu vực Tầng 1
+                    </div>
+                  </div>
+                  <span class="chip">Trạng thái: Chờ thanh toán</span>
+                </div>
+                <div class="order-items-table">
+                  <div class="order-row.header">
+                    <div>Món</div>
+                    <div>SL</div>
+                    <div>Đơn giá</div>
+                    <div>Thành tiền</div>
+                    <div>Ghi chú</div>
+                  </div>
+                  <div class="order-row">
+                    <div>Bò lúc lắc</div>
+                    <div>2</div>
+                    <div>150k</div>
+                    <div>300k</div>
+                    <div>Ít cay</div>
+                  </div>
+                  <div class="order-row">
+                    <div>Nước cam</div>
+                    <div>3</div>
+                    <div>35k</div>
+                    <div>105k</div>
+                    <div></div>
+                  </div>
+                </div>
+
+                <div class="payment-summary">
+                  <div class="payment-row">
+                    <span>Tạm tính</span><span>405.000đ</span>
+                  </div>
+                  <div class="payment-row">
+                    <span>Giảm giá (%)</span>
+                    <span class="input" style="width: 70px; text-align: right"
+                      >10</span
+                    >
+                  </div>
+                  <div class="payment-row">
+                    <span>Giảm giá (VNĐ)</span><span>40.500đ</span>
+                  </div>
+                  <div class="payment-row">
+                    <span>Thuế</span><span>0đ</span>
+                  </div>
+                  <div class="payment-row" style="font-weight: 600">
+                    <span>Tổng phải trả</span><span>364.500đ</span>
+                  </div>
+                </div>
+
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-top: 6px;
+                  "
+                >
+                  <div style="font-size: 11px">
+                    <div>Phương thức thanh toán:</div>
+                    <div style="margin-top: 2px">
+                      <span class="chip-filter active">Tiền mặt</span>
+                      <span class="chip-filter">Thẻ</span>
+                      <span class="chip-filter">Ví điện tử</span>
+                      <span class="chip-filter">Khác</span>
+                    </div>
+                  </div>
+                  <div style="display: flex; gap: 6px">
+                    <button class="btn-soft">In tạm tính</button>
+                    <button class="btn-soft-primary">
+                      Xác nhận thanh toán
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- INVENTORY VIEW -->
+          <section id="view-inventory" class="view">
+            <div class="view-header">
+              <div>
+                <div class="view-title">
+                  <span>Nguyên liệu &amp; tồn kho</span>
+                  <span class="chip">Vai trò: Quản lý</span>
+                </div>
+                <div class="view-subtitle">
+                  Xem tồn kho theo nguyên liệu, nhập/xuất/điều chỉnh và theo dõi
+                  cảnh báo dưới ngưỡng.
+                </div>
+              </div>
+              <div class="toolbar">
+                <div class="input">Tìm nguyên liệu...</div>
+                <div class="input">Nhóm: Tất cả ▼</div>
+                <div class="input">Trạng thái: Tất cả ▼</div>
+              </div>
+            </div>
+
+            <div class="inventory-layout">
+              <div class="inventory-table">
+                <div class="inv-row header">
+                  <div>Nguyên liệu</div>
+                  <div>Đơn vị</div>
+                  <div>Tồn</div>
+                  <div>Ngưỡng</div>
+                  <div>Trạng thái</div>
+                </div>
+                <div class="inv-row">
+                  <div>Thịt bò phi lê</div>
+                  <div>Kg</div>
+                  <div>8</div>
+                  <div>5</div>
+                  <div>Bình thường</div>
+                </div>
+                <div class="inv-row">
+                  <div>Rau xà lách</div>
+                  <div>Kg</div>
+                  <div>2</div>
+                  <div>5</div>
+                  <div>Dưới ngưỡng</div>
+                </div>
+                <div class="inv-row">
+                  <div>Nước cam cô đặc</div>
+                  <div>Lít</div>
+                  <div>0</div>
+                  <div>3</div>
+                  <div>Hết hàng</div>
+                </div>
+              </div>
+
+              <div class="inventory-detail">
+                <div style="font-weight: 600">Chi tiết nguyên liệu</div>
+                <div>
+                  Tên: <strong>Rau xà lách</strong><br />
+                  Đơn vị: Kg<br />
+                  Tồn hiện tại: 2<br />
+                  Ngưỡng tối thiểu: 5<br />
+                  Trạng thái: <span class="tag-warning">Dưới ngưỡng</span>
+                </div>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap">
+                  <button class="btn-soft-primary">Nhập kho</button>
+                  <button class="btn-soft">Xuất kho</button>
+                  <button class="btn-soft">Điều chỉnh</button>
+                  <button class="btn-soft">Sửa thông tin</button>
+                </div>
+                <div>
+                  <div style="font-weight: 600; margin-top: 4px">
+                    Lịch sử giao dịch gần đây
+                  </div>
+                  <div class="simple-table" style="margin-top: 4px">
+                    <div class="st-row header">
+                      <span>Ngày</span><span>Loại</span><span>SL</span>
+                    </div>
+                    <div class="st-row">
+                      <span>01/11</span><span>Nhập</span><span>+5</span>
+                    </div>
+                    <div class="st-row">
+                      <span>03/11</span><span>Xuất</span><span>-3</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      // ==== JS nhỏ để chuyển view & chọn bàn ====
+
+      // Sidebar navigation
+      const navItems = document.querySelectorAll(".nav-item");
+      const views = document.querySelectorAll(".view");
+
+      navItems.forEach((item) => {
+        item.addEventListener("click", () => {
+          const target = item.getAttribute("data-view");
+          if (!target) return;
+
+          // toggle active nav
+          navItems.forEach((n) => n.classList.remove("active"));
+          item.classList.add("active");
+
+          // toggle views
+          views.forEach((v) => {
+            v.classList.toggle("active", v.id === "view-" + target);
+          });
+        });
+      });
+
+      // Select table -> update order header text
+      const tableCards = document.querySelectorAll(".table-card");
+      const orderMeta = document.getElementById("orderMeta");
+      const orderStatusChip = document.getElementById("orderStatusChip");
+
+      tableCards.forEach((card) => {
+        card.addEventListener("click", () => {
+          tableCards.forEach((c) => c.classList.remove("selected"));
+          card.classList.add("selected");
+
+          const name = card.getAttribute("data-table");
+          const status = card.getAttribute("data-status");
+          const guests = card.getAttribute("data-guests");
+
+          orderMeta.textContent = `Bàn ${name} · ${guests} khách · Khu vực Tầng 1`;
+          orderStatusChip.textContent = `Trạng thái: ${status}`;
+        });
+      });
+    </script>
+  </body>
+</html>

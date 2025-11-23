@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>PTIT-RMS Wireframes</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f2f2f2;
+      color: #333;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #ffffff;
+      border-bottom: 1px solid #ddd;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header .title {
+      font-weight: 600;
+      font-size: 14px;
+    }
+    header nav a {
+      margin-left: 8px;
+      padding: 4px 8px;
+      font-size: 12px;
+      text-decoration: none;
+      color: #555;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      background: #fafafa;
+    }
+    header nav a:hover {
+      background: #eee;
+    }
+
+    .section {
+      padding: 24px 16px 40px;
+    }
+    .section h2 {
+      font-size: 18px;
+      margin: 0 0 8px;
+    }
+    .section p {
+      margin: 0 0 12px;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .frame {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      padding: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      min-height: 600px;
+    }
+
+    /* Generic */
+    .top-bar {
+      height: 56px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      margin-bottom: 12px;
+    }
+    .top-bar .left,
+    .top-bar .right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      font-size: 11px;
+    }
+    .input {
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      font-size: 12px;
+      background: #fafafa;
+    }
+    .btn {
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 12px;
+      background: #f5f5f5;
+    }
+    .btn-primary {
+      background: #e0e0e0;
+      border-color: #bdbdbd;
+      font-weight: 600;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid #ccc;
+      font-size: 11px;
+    }
+
+    /* WF-01 Login */
+    .login-wrapper {
+      height: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-card {
+      width: 360px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      padding: 20px 16px;
+      background: #fafafa;
+    }
+    .login-card h3 {
+      margin: 0 0 16px;
+      font-size: 18px;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 4px;
+    }
+    .role-grid {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .role-card {
+      border: 1px dashed #ccc;
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 12px;
+    }
+    .role-card strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* WF-02 Table & Ordering */
+    .two-column {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 12px;
+      height: calc(100% - 72px);
+    }
+    .panel {
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      padding: 8px;
+      font-size: 12px;
+      background: #fafafa;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .panel-header h4 {
+      margin: 0;
+      font-size: 13px;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+    .table-grid {
+      flex: 1;
+      border-radius: 6px;
+      border: 1px dashed #ccc;
+      padding: 8px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 6px;
+    }
+    .table-card {
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 11px;
+      padding: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: flex-start;
+    }
+
+    .order-summary {
+      border-radius: 6px;
+      border: 1px dashed #ccc;
+      padding: 6px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .order-items-table {
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      padding: 4px;
+      font-size: 11px;
+    }
+    .order-items-table .row {
+      display: grid;
+      grid-template-columns: 2fr 0.5fr 0.8fr 0.8fr 1fr;
+      gap: 4px;
+      padding: 2px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .order-items-table .row.header {
+      font-weight: 600;
+      border-bottom: 1px solid #ccc;
+    }
+    .order-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .order-search {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      border-radius: 4px;
+      border: 1px dashed #ccc;
+      padding: 6px;
+      font-size: 11px;
+    }
+
+    /* WF-03 Kitchen */
+    .three-column {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      height: calc(100% - 72px);
+    }
+    .col {
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      padding: 6px;
+      background: #fafafa;
+      display: flex;
+      flex-direction: column;
+    }
+    .col h4 {
+      margin: 0 0 4px;
+      font-size: 13px;
+    }
+    .ticket {
+      border-radius: 6px;
+      border: 1px dashed #ccc;
+      padding: 6px;
+      font-size: 11px;
+      margin-bottom: 4px;
+    }
+
+    /* WF-04 Payment */
+    .payment-layout {
+      display: grid;
+      grid-template-columns: 2.2fr 3fr;
+      gap: 10px;
+      height: calc(100% - 72px);
+    }
+    .list-panel {
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      padding: 6px;
+      background: #fafafa;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .list-item {
+      border-radius: 4px;
+      border: 1px dashed #ccc;
+      padding: 4px 6px;
+      font-size: 11px;
+      margin-bottom: 4px;
+    }
+    .detail-panel {
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      padding: 6px;
+      background: #fafafa;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12px;
+    }
+    .payment-summary {
+      border-radius: 4px;
+      border: 1px dashed #ccc;
+      padding: 6px;
+      font-size: 11px;
+    }
+    .payment-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+
+    /* WF-05 Inventory */
+    .inventory-layout {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 10px;
+      height: calc(100% - 72px);
+    }
+    .inventory-table {
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      padding: 6px;
+      font-size: 11px;
+      background: #fafafa;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .inventory-row {
+      display: grid;
+      grid-template-columns: 2fr 0.7fr 0.9fr 0.9fr 0.9fr;
+      gap: 4px;
+      padding: 2px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .inventory-row.header {
+      font-weight: 600;
+      border-bottom: 1px solid #ccc;
+    }
+    .inventory-detail {
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      padding: 6px;
+      background: #fafafa;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    /* WF-06 Dashboard */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .kpi-card {
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      background: #fafafa;
+      padding: 6px;
+      font-size: 11px;
+    }
+    .charts-row {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .chart-placeholder {
+      border-radius: 6px;
+      border: 1px dashed #ccc;
+      background: #fdfdfd;
+      padding: 12px;
+      font-size: 11px;
+      text-align: center;
+    }
+    .tables-row {
+      display: grid;
+      grid-template-columns: 1.5fr 1.5fr;
+      gap: 8px;
+    }
+    .simple-table {
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      padding: 6px;
+      font-size: 11px;
+      background: #fafafa;
+    }
+    .simple-table .row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #eee;
+      padding: 2px 0;
+    }
+    .simple-table .row.header {
+      font-weight: 600;
+      border-bottom: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="title">PTIT-RMS – Wireframes (HTML Skeleton)</div>
+  <nav>
+    <a href="#wf01">WF-01 Login</a>
+    <a href="#wf02">WF-02 Bàn & Gọi món</a>
+    <a href="#wf03">WF-03 Bếp</a>
+    <a href="#wf04">WF-04 Thanh toán</a>
+    <a href="#wf05">WF-05 Tồn kho</a>
+    <a href="#wf06">WF-06 Dashboard</a>
+  </nav>
+</header>
+
+<!-- WF-01 -->
+<section class="section" id="wf01">
+  <h2>WF-01 – Đăng nhập & chọn vai trò</h2>
+  <p>Wireframe cho màn hình đăng nhập PTIT-RMS và chọn vai trò (Waiter, Chef, Cashier, Manager).</p>
+  <div class="frame">
+    <div class="top-bar">
+      <div class="left">
+        <span class="badge">Logo</span>
+        <span style="font-size:12px;">PTIT-RMS</span>
+      </div>
+    </div>
+    <div class="login-wrapper">
+      <div class="login-card">
+        <h3>Đăng nhập PTIT-RMS</h3>
+        <div class="form-group">
+          <label>Email / Tài khoản</label>
+          <div class="input">placeholder</div>
+        </div>
+        <div class="form-group">
+          <label>Mật khẩu</label>
+          <div class="input">placeholder</div>
+        </div>
+        <div class="form-group">
+          <label><input type="checkbox"> Ghi nhớ đăng nhập</label>
+        </div>
+        <div class="form-group" style="text-align:center; margin-bottom:14px;">
+          <button class="btn btn-primary">Đăng nhập</button>
+        </div>
+        <div style="font-size:11px; margin-bottom:4px;">Chọn vai trò sau khi đăng nhập:</div>
+        <div class="role-grid">
+          <div class="role-card">
+            <strong>Nhân viên phục vụ</strong>
+            <span>Quản lý sơ đồ bàn, gọi món, gửi bếp.</span>
+          </div>
+          <div class="role-card">
+            <strong>Nhân viên bếp</strong>
+            <span>Xử lý món, cập nhật trạng thái.</span>
+          </div>
+          <div class="role-card">
+            <strong>Thu ngân</strong>
+            <span>Thanh toán, in hóa đơn.</span>
+          </div>
+          <div class="role-card">
+            <strong>Quản lý</strong>
+            <span>Kho, menu, báo cáo, tài khoản.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WF-02 -->
+<section class="section" id="wf02">
+  <h2>WF-02 – Sơ đồ bàn & Gọi món tại bàn (Waiter)</h2>
+  <p>Màn hình để nhân viên phục vụ xem sơ đồ bàn, nhận bàn, tạo/cập nhật đơn hàng và gọi món.</p>
+  <div class="frame">
+    <div class="top-bar">
+      <div class="left">
+        <span style="font-size:13px;font-weight:600;">PTIT-RMS / Sơ đồ bàn</span>
+        <span class="pill">Khu vực: Tầng 1 ▼</span>
+      </div>
+      <div class="right">
+        <span class="pill">Ca: 10:00–14:00</span>
+        <span class="badge">Anh – Waiter</span>
+        <button class="btn">Đăng xuất</button>
+      </div>
+    </div>
+    <div class="two-column">
+      <!-- Left: Table map -->
+      <div class="panel">
+        <div class="panel-header">
+          <h4>Sơ đồ bàn</h4>
+          <div class="pill">Lọc: Tất cả</div>
+        </div>
+        <div class="filters">
+          <span class="pill">Tất cả</span>
+          <span class="pill">Trống</span>
+          <span class="pill">Đang phục vụ</span>
+          <span class="pill">Đặt trước</span>
+          <span class="pill">Cần dọn</span>
+          <span class="pill">Khóa</span>
+        </div>
+        <div class="table-grid">
+          <div class="table-card">
+            <strong>T01</strong>
+            <span>4 ghế</span>
+            <span class="badge">Trống</span>
+          </div>
+          <div class="table-card">
+            <strong>T02</strong>
+            <span>6 ghế</span>
+            <span class="badge">Đang phục vụ</span>
+          </div>
+          <div class="table-card">
+            <strong>T03</strong>
+            <span>4 ghế</span>
+            <span class="badge">Đặt trước</span>
+          </div>
+          <!-- thêm nhiều bàn dạng placeholder -->
+        </div>
+      </div>
+
+      <!-- Right: Order panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h4>Đơn hàng tại bàn</h4>
+            <div style="font-size:11px;color:#666;">Bàn T02 – 4 khách – Khu vực Tầng 1</div>
+          </div>
+          <div>
+            <span class="badge">Đang phục vụ</span>
+          </div>
+        </div>
+        <div class="order-summary">
+          <div class="order-items-table">
+            <div class="row header">
+              <div>Món</div>
+              <div>SL</div>
+              <div>Đơn giá</div>
+              <div>Thành tiền</div>
+              <div>Trạng thái</div>
+            </div>
+            <div class="row">
+              <div>Bò lúc lắc</div>
+              <div>2</div>
+              <div>150k</div>
+              <div>300k</div>
+              <div>Đã gửi bếp</div>
+            </div>
+            <div class="row">
+              <div>Nước cam</div>
+              <div>3</div>
+              <div>35k</div>
+              <div>105k</div>
+              <div>Chưa gửi</div>
+            </div>
+          </div>
+          <div class="order-footer">
+            <div style="font-size:11px;">
+              <div>Tạm tính: <strong>405.000đ</strong></div>
+              <div style="color:#777;">Ghi chú: Khách muốn lên món nhanh.</div>
+            </div>
+            <div style="display:flex; gap:4px;">
+              <button class="btn">Lưu</button>
+              <button class="btn">Gửi bếp</button>
+              <button class="btn btn-primary">Yêu cầu thanh toán</button>
+            </div>
+          </div>
+          <div class="order-search">
+            <div style="display:flex; gap:4px;">
+              <div class="input" style="flex:1;">Tìm món...</div>
+              <div class="input" style="width:140px;">Danh mục ▼</div>
+            </div>
+            <div style="border-top:1px solid #eee; padding-top:4px;">
+              <div style="margin-bottom:2px;">Danh sách món (wireframe):</div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Cơm chiên hải sản</span><span>75k</span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Lẩu thái</span><span>220k</span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span>Trà đào cam sả</span><span>45k</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WF-03 -->
+<section class="section" id="wf03">
+  <h2>WF-03 – Màn hình Bếp (Kitchen)</h2>
+  <p>Màn hình cho nhân viên bếp xem danh sách món chờ, đang chế biến, đã sẵn sàng.</p>
+  <div class="frame">
+    <div class="top-bar">
+      <div class="left">
+        <span style="font-size:13px;font-weight:600;">PTIT-RMS / Bếp</span>
+        <span class="pill">Khu vực: Tầng 1 ▼</span>
+      </div>
+      <div class="right">
+        <span class="pill">Lọc: Món ăn</span>
+        <span class="badge">Bếp trưởng</span>
+        <button class="btn">Đăng xuất</button>
+      </div>
+    </div>
+    <div class="three-column">
+      <div class="col">
+        <h4>Chờ chế biến</h4>
+        <div class="ticket">
+          <strong>Bò lúc lắc</strong><br>
+          Bàn T02 – SL: 2<br>
+          Ghi chú: Ít cay<br>
+          Thời gian gửi: 12:05<br>
+          <div style="margin-top:4px;">
+            <button class="btn btn-primary">Bắt đầu chế biến</button>
+          </div>
+        </div>
+        <div class="ticket">
+          <strong>Lẩu thái</strong><br>
+          Bàn T03 – SL: 1<br>
+          Thời gian gửi: 12:10
+        </div>
+      </div>
+      <div class="col">
+        <h4>Đang chế biến</h4>
+        <div class="ticket">
+          <strong>Gà nướng muối ớt</strong><br>
+          Bàn T01 – SL: 1<br>
+          Bắt đầu: 12:07<br>
+          <div style="margin-top:4px;">
+            <button class="btn btn-primary">Hoàn thành</button>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <h4>Đã sẵn sàng</h4>
+        <div class="ticket">
+          <strong>Nước cam</strong><br>
+          Bàn T02 – SL: 3<br>
+          Sẵn sàng: 12:09<br>
+          <span class="badge">Đợi phục vụ</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WF-04 -->
+<section class="section" id="wf04">
+  <h2>WF-04 – Thanh toán & in hóa đơn (Cashier)</h2>
+  <p>Màn hình cho Thu ngân chọn đơn, tính tiền, áp dụng giảm giá và in hóa đơn.</p>
+  <div class="frame">
+    <div class="top-bar">
+      <div class="left">
+        <span style="font-size:13px;font-weight:600;">PTIT-RMS / Thanh toán</span>
+      </div>
+      <div class="right">
+        <span class="input">Tìm bàn / mã đơn...</span>
+        <span class="badge">Lan – Cashier</span>
+        <button class="btn">Đăng xuất</button>
+      </div>
+    </div>
+    <div class="payment-layout">
+      <div class="list-panel">
+        <div style="display:flex; gap:4px; margin-bottom:4px;">
+          <button class="btn btn-primary">Bàn</button>
+          <button class="btn">Đơn hàng</button>
+        </div>
+        <div class="list-item">
+          <strong>Bàn T02</strong><br>
+          Đang chờ thanh toán – 405.000đ
+        </div>
+        <div class="list-item">
+          <strong>Bàn T05</strong><br>
+          Đang dùng bữa
+        </div>
+      </div>
+      <div class="detail-panel">
+        <div class="panel-header">
+          <div>
+            <h4>Đơn hàng Bàn T02</h4>
+            <div style="font-size:11px;color:#666;">
+              Mã ĐH: ORD-2023-00123 – 4 khách – Khu vực Tầng 1
+            </div>
+          </div>
+          <div>
+            <span class="badge">Chờ thanh toán</span>
+          </div>
+        </div>
+        <div class="order-items-table">
+          <div class="row header">
+            <div>Món</div>
+            <div>SL</div>
+            <div>Đơn giá</div>
+            <div>Thành tiền</div>
+            <div>Ghi chú</div>
+          </div>
+          <div class="row">
+            <div>Bò lúc lắc</div>
+            <div>2</div>
+            <div>150k</div>
+            <div>300k</div>
+            <div>Ít cay</div>
+          </div>
+          <div class="row">
+            <div>Nước cam</div>
+            <div>3</div>
+            <div>35k</div>
+            <div>105k</div>
+            <div></div>
+          </div>
+        </div>
+        <div class="payment-summary">
+          <div class="payment-row">
+            <span>Tạm tính</span> <span>405.000đ</span>
+          </div>
+          <div class="payment-row">
+            <span>Giảm giá (%)</span> <span class="input" style="width:60px;">10</span>
+          </div>
+          <div class="payment-row">
+            <span>Giảm giá (VNĐ)</span> <span>40.500đ</span>
+          </div>
+          <div class="payment-row">
+            <span>Thuế</span> <span>0đ</span>
+          </div>
+          <div class="payment-row" style="font-weight:600;">
+            <span>Tổng phải trả</span> <span>364.500đ</span>
+          </div>
+        </div>
+        <div style="display:flex; gap:6px; align-items:center;">
+          <div style="font-size:11px; flex:1;">
+            <div>Phương thức thanh toán:</div>
+            <div style="margin-top:2px;">
+              <span class="pill">Tiền mặt</span>
+              <span class="pill">Thẻ</span>
+              <span class="pill">Ví điện tử</span>
+              <span class="pill">Khác</span>
+            </div>
+          </div>
+          <div style="display:flex; gap:4px;">
+            <button class="btn">In tạm tính</button>
+            <button class="btn btn-primary">Xác nhận thanh toán</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WF-05 -->
+<section class="section" id="wf05">
+  <h2>WF-05 – Nguyên liệu & tồn kho (Inventory)</h2>
+  <p>Màn hình cho Quản lý xem tồn kho, nhập/xuất/điều chỉnh và theo dõi cảnh báo nguyên liệu thấp.</p>
+  <div class="frame">
+    <div class="top-bar">
+      <div class="left">
+        <span style="font-size:13px;font-weight:600;">PTIT-RMS / Nguyên liệu & tồn kho</span>
+      </div>
+      <div class="right">
+        <span class="input">Tìm nguyên liệu...</span>
+        <span class="pill">Nhóm: Tất cả ▼</span>
+        <span class="pill">Trạng thái: Tất cả ▼</span>
+      </div>
+    </div>
+    <div class="inventory-layout">
+      <div class="inventory-table">
+        <div class="inventory-row header">
+          <div>Nguyên liệu</div>
+          <div>Đơn vị</div>
+          <div>Tồn</div>
+          <div>Ngưỡng</div>
+          <div>Trạng thái</div>
+        </div>
+        <div class="inventory-row">
+          <div>Thịt bò phi lê</div>
+          <div>Kg</div>
+          <div>8</div>
+          <div>5</div>
+          <div>Bình thường</div>
+        </div>
+        <div class="inventory-row">
+          <div>Rau xà lách</div>
+          <div>Kg</div>
+          <div>2</div>
+          <div>5</div>
+          <div>Dưới ngưỡng</div>
+        </div>
+        <div class="inventory-row">
+          <div>Nước cam cô đặc</div>
+          <div>Lít</div>
+          <div>0</div>
+          <div>3</div>
+          <div>Hết hàng</div>
+        </div>
+      </div>
+      <div class="inventory-detail">
+        <div style="font-weight:600;">Chi tiết nguyên liệu</div>
+        <div style="font-size:11px;">
+          Tên: <strong>Rau xà lách</strong><br>
+          Đơn vị: Kg<br>
+          Tồn hiện tại: 2<br>
+          Ngưỡng tối thiểu: 5<br>
+          Trạng thái: <span class="badge">Dưới ngưỡng</span>
+        </div>
+        <div style="display:flex; gap:4px; flex-wrap:wrap;">
+          <button class="btn btn-primary">Nhập kho</button>
+          <button class="btn">Xuất kho</button>
+          <button class="btn">Điều chỉnh</button>
+          <button class="btn">Sửa thông tin</button>
+        </div>
+        <div style="font-size:11px;">
+          <div style="font-weight:600; margin-top:6px;">Lịch sử giao dịch gần đây</div>
+          <div class="simple-table" style="margin-top:4px;">
+            <div class="row header">
+              <span>Ngày</span><span>Loại</span><span>SL</span>
+            </div>
+            <div class="row">
+              <span>01/11</span><span>Nhập</span><span>+5</span>
+            </div>
+            <div class="row">
+              <span>03/11</span><span>Xuất</span><span>-3</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WF-06 -->
+<section class="section" id="wf06">
+  <h2>WF-06 – Dashboard Quản lý</h2>
+  <p>Màn hình tổng quan cho Quản lý: KPI, biểu đồ doanh thu, món bán chạy và nguyên liệu dưới ngưỡng.</p>
+  <div class="frame">
+    <div class="top-bar">
+      <div class="left">
+        <span style="font-size:13px;font-weight:600;">PTIT-RMS / Dashboard</span>
+      </div>
+      <div class="right">
+        <span class="pill">Khoảng thời gian: Hôm nay ▼</span>
+        <span class="pill">Ca: Tất cả ▼</span>
+        <span class="pill">Khu vực: Tất cả ▼</span>
+      </div>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div style="font-size:10px;color:#777;">Doanh thu hôm nay</div>
+        <div style="font-size:16px;font-weight:600;">12.500.000đ</div>
+      </div>
+      <div class="kpi-card">
+        <div style="font-size:10px;color:#777;">Số bàn đã phục vụ</div>
+        <div style="font-size:16px;font-weight:600;">32</div>
+      </div>
+      <div class="kpi-card">
+        <div style="font-size:10px;color:#777;">Đơn hủy</div>
+        <div style="font-size:16px;font-weight:600;">2</div>
+      </div>
+      <div class="kpi-card">
+        <div style="font-size:10px;color:#777;">Nguyên liệu dưới ngưỡng</div>
+        <div style="font-size:16px;font-weight:600;">5</div>
+      </div>
+    </div>
+    <div class="charts-row">
+      <div class="chart-placeholder">
+        Biểu đồ cột: Doanh thu theo khung giờ / ngày (wireframe)
+      </div>
+      <div class="chart-placeholder">
+        Biểu đồ tròn: Tỉ lệ doanh thu theo danh mục món (wireframe)
+      </div>
+    </div>
+    <div class="tables-row">
+      <div class="simple-table">
+        <div class="row header">
+          <span>Món</span><span>SL</span>
+        </div>
+        <div class="row">
+          <span>Bò lúc lắc</span><span>25</span>
+        </div>
+        <div class="row">
+          <span>Cơm chiên hải sản</span><span>18</span>
+        </div>
+      </div>
+      <div class="simple-table">
+        <div class="row header">
+          <span>Nguyên liệu</span><span>Tồn / Ngưỡng</span>
+        </div>
+        <div class="row">
+          <span>Rau xà lách</span><span>2 / 5</span>
+        </div>
+        <div class="row">
+          <span>Nước cam cô đặc</span><span>0 / 3</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
